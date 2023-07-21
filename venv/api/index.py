@@ -558,15 +558,6 @@ def add_header(response):
     return response
 
 iterator =0
-def run_cycle():
-    start_process()
 
-def schedule_run_cycle():
-    scheduler = BackgroundScheduler()
-    # Change this line to run every 2 minutes
-    scheduler.add_job(run_cycle, "interval", hours=24)
-    scheduler.start()
 
-# start_process()
-schedule_run_cycle()
 app.run(debug=True, port=5000)

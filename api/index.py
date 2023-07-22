@@ -140,15 +140,14 @@ class Account:
             'followed_by': self.followed_by
         }
 length = 0
-def load_chrome_driver(proxy):
-    options = Options()
-    options.binary_location = os.environ.get('GOOGLE_CHROME_BIN')
-    options.add_argument('--headless')
-    options.add_argument('--disable-gpu')
-    options.add_argument('--no-sandbox')
-    options.add_argument('--remote-debugging-port=9222')
-    options.add_argument('--proxy-server=' + proxy)
-    return webdriver.Chrome(executable_path=str(os.environ.get('CHROMEDRIVER_PATH')), options=options)
+def load_chrome_driver():
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--no-sandbox")
+    driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+    return driver
 def update_last_num(amt):
     try:
         supabase.table('sign').update({
@@ -201,7 +200,7 @@ def logIn_Credentials(cred_user,cred_password):
     return driver
 def logIn():
     # create instance of Chrome webdriver
-    driver = load_chrome_driver('https://twit-bot-joe-024adbd685fc.herokuapp.com')  # or driver = load_chrome_driver("")
+    driver = load_chrome_driver()  # or driver = load_chrome_driver("")
     driver.get("https://twitter.com/login")
         # adjust the sleep time according to your internet speed
     time.sleep(2)

@@ -144,9 +144,7 @@ length = 0
 def load_chrome_driver():
     chrome_options = webdriver.ChromeOptions()
     chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--no-sandbox")
+    chrome_options.arguments = ['--no-sandbox', '--disable-dev-shm-usage', '--headless', '--disable-gpu', '--window-size=1920,1080', '--disable-extensions', '--proxy-server=\'direct://\'', '--proxy-bypass-list=*']
     driver = webdriver.Chrome(os.environ.get("CHROMEDRIVER_PATH"), options=chrome_options)
     return driver
 def update_last_num(amt):

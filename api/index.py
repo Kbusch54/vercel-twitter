@@ -201,7 +201,7 @@ def logIn_Credentials(cred_user,cred_password):
     return driver
 def logIn():
     # create instance of Chrome webdriver
-    driver = load_chrome_driver(None)  # or driver = load_chrome_driver("")
+    driver = load_chrome_driver('https://twit-bot-joe-024adbd685fc.herokuapp.com')  # or driver = load_chrome_driver("")
     driver.get("https://twitter.com/login")
         # adjust the sleep time according to your internet speed
     time.sleep(2)

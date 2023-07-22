@@ -14,6 +14,8 @@ from flask import request
 from flask_cors import CORS, cross_origin
 from dotenv import load_dotenv
 from supabase import create_client, Client
+import chromedriver_autoinstaller
+
 
 import os
 dotenv_path = '../.env'
@@ -139,18 +141,15 @@ class Account:
             'followed_by': self.followed_by
         }
 length = 0
-def load_chrome_driver(proxy=None):
-    service = Service(executable_path='./chromedriver.exe')
-    options = Options()
-    options.add_argument('--headless')
-    options.add_argument('--disable-gpu')
-    options.add_argument('--no-sandbox')
-    options.add_argument('--remote-debugging-port=9222')
-    
-    if proxy:
-        options.add_argument('--proxy-server=' + proxy)
-    
-    return webdriver.Chrome(service=service, options=options)
+def load_chrome_driver():
+    chromedriver_autoinstaller.install()
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    chrome_options.add_argument('--headless')
+    driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=chrome_options)
+    return driver
 def update_last_num(amt):
     try:
         supabase.table('sign').update({

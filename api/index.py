@@ -13,7 +13,6 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from flask import request
 from flask_cors import CORS, cross_origin
 from dotenv import load_dotenv
-from datetime import datetime
 from supabase import create_client, Client
 
 import os

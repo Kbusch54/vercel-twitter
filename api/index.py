@@ -232,6 +232,8 @@ def tweetThis(tweet):
     print(tweet)
     driver = twitter_log_in()
     time.sleep(2)
+    driver.get("https://twitter.com/compose/tweet")
+    time.sleep(2)
     driver.find_element(by='xpath',value=textBox).send_keys(tweet)
     time.sleep(2)
     tweetButton = '//*[@id="layers"]/div[2]/div/div/div/div/div/div[2]/div[2]/div/div/div/div[3]/div[2]/div[1]/div/div/div/div[2]/div[2]/div/div/div[2]/div[4]'

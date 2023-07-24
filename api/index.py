@@ -149,7 +149,7 @@ def update_last_num(amt):
         supabase.table('sign').update({
             'last_updated': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             'new_amount': amt
-        }).eq('id', 2).execute()
+        }).eq('id', 0).execute()
     except (Exception) as error:
         print ("Error while connecting to PostgreSQL", error)
     finally:

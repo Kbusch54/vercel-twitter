@@ -310,6 +310,8 @@ def add_list(usersToAdd):
     driver.find_element(by='xpath',value=listNextBtn).click()
     time.sleep(2)
     for users in usersToAdd:
+        print(users)
+        time.sleep(2)
         driver.find_element(by='xpath',value=searchPeopleBox).send_keys(users)
         time.sleep(2)
         addMe = driver.find_element( by=By.XPATH,value=addBtnList)

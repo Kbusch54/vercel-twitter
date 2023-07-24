@@ -36,11 +36,11 @@ dbHost = 'db.utvsxgfogcixgkztnvxo.supabase.co'
 dbdDatabase='postgres'
 print(url)
 supabase: Client = create_client(url, key)
-options = Options()
-options.add_argument("--disable-extensions")
-options.add_argument("--disable-gpu")
+# options = Options()
+# options.add_argument("--disable-extensions")
+# options.add_argument("--disable-gpu")
 # options.add_argument("--no-sandbox") # linux only
-options.add_argument("--headless")
+# options.add_argument("--headless")
 # mac only
 # options.add_argument("--start-maximized")
 

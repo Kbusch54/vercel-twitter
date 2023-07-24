@@ -205,14 +205,17 @@ def logIn():
     # enter the xpath
     # driver.find_element.__getattribute__
     # fill the number or mail
+    print('on twitter log in page')
     driver.find_element(
         by='xpath', value=inputUser).send_keys(user)
     # find the element next button 
     # request using xpath 
     # clicking on that element 
+    time.sleep(1)
     driver.find_element(
         by='xpath',
         value=nextBtn).click()
+    print('clicked next button')
 
     # adjust the sleep time according to your internet speed
     time.sleep(2)
@@ -225,13 +228,14 @@ def logIn():
     # find the element login button
     # request using xpath
     # clicking on that element
+    print('about to click log in button and send password')
     driver.find_element(by='xpath',value=logInBtn).click()
     # adjust the sleep time according to your internet speed
     time.sleep(2)
-
+    print('sent password')
     driver.find_element(by='xpath',value=tweetBtn).click()
     time.sleep(2)
-    return driver
+    print('clicked log in button')
 def tweetThis(tweet):
     print('tweeting this')
     print(tweet)

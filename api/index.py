@@ -277,41 +277,41 @@ def twitter_log_in():
     driver.find_element(by='xpath',value=logInBtn).click()
     # adjust the sleep time according to your internet speed
     return driver
-def add_list(usersToAdd):
-    driver = twitter_log_in()
-    time.sleep(2)
-    # get_following(driver,tracking)
-    driver.get("https://twitter.com/"+user+"/lists")
-    time.sleep(2)
-    driver.find_element(by='xpath',value=listBtn).click()
-    time.sleep(2)
-    eastern = pytz.timezone('US/Eastern')
-    eastern_time = datetime.datetime.now(eastern)
-    # Define the Eastern Time Zone
-    eastern = pytz.timezone('US/Eastern')
+# def add_list(usersToAdd):
+#     driver = twitter_log_in()
+#     time.sleep(2)
+#     # get_following(driver,tracking)
+#     driver.get("https://twitter.com/"+user+"/lists")
+#     time.sleep(2)
+#     driver.find_element(by='xpath',value=listBtn).click()
+#     time.sleep(2)
+#     eastern = pytz.timezone('US/Eastern')
+#     eastern_time = datetime.datetime.now(eastern)
+#     # Define the Eastern Time Zone
+#     eastern = pytz.timezone('US/Eastern')
 
-    # Get the current time in Eastern Time Zone
-    eastern_time = datetime.datetime.now(eastern)
+#     # Get the current time in Eastern Time Zone
+#     eastern_time = datetime.datetime.now(eastern)
 
-    # Format the time in 'HH:MM AM/PM' format
-    hour_am_pm = eastern_time.strftime('%I:%M %p')
-    driver.find_element(by='xpath',value=nameInput).send_keys('Joes list '+datetime.datetime.now().strftime("%m-%d ")+hour_am_pm)
-    driver.find_element(by='xpath',value=descriptionBox).send_keys('Twitter list to follow for joe '+datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
-    time.sleep(2)
-    driver.find_element(by='xpath',value=listNextBtn).click()
-    time.sleep(2)
-    for users in usersToAdd:
-        print(users)
-        time.sleep(2)
-        driver.find_element(by='xpath',value=searchPeopleBox).send_keys(users)
-        time.sleep(2)
-        addMe = driver.find_element( by=By.XPATH,value=addBtnList)
-        driver.execute_script("arguments[0].click();", addMe)
-        time.sleep(2)
-        driver.find_element(by='xpath',value=usedSerachPeople).click()
-        time.sleep(2)
-    driver.find_element(by='xpath',value=doneLisatBtn).click()
-    driver.close() 
+#     # Format the time in 'HH:MM AM/PM' format
+#     hour_am_pm = eastern_time.strftime('%I:%M %p')
+#     driver.find_element(by='xpath',value=nameInput).send_keys('Joes list '+datetime.datetime.now().strftime("%m-%d ")+hour_am_pm)
+#     driver.find_element(by='xpath',value=descriptionBox).send_keys('Twitter list to follow for joe '+datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
+#     time.sleep(2)
+#     driver.find_element(by='xpath',value=listNextBtn).click()
+#     time.sleep(2)
+#     for users in usersToAdd:
+#         print(users)
+#         time.sleep(2)
+#         driver.find_element(by='xpath',value=searchPeopleBox).send_keys(users)
+#         time.sleep(2)
+#         addMe = driver.find_element( by=By.XPATH,value=addBtnList)
+#         driver.execute_script("arguments[0].click();", addMe)
+#         time.sleep(2)
+#         driver.find_element(by='xpath',value=usedSerachPeople).click()
+#         time.sleep(2)
+#     driver.find_element(by='xpath',value=doneLisatBtn).click()
+#     driver.close() 
 def start_process():
     accounts = get_all_accounts()
     global length

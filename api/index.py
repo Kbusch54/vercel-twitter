@@ -135,14 +135,10 @@ length = 0
 def load_chrome_driver():
     service = Service(executable_path=r'/usr/bin/chromedriver')
     options = webdriver.ChromeOptions()
-    options.add_argument('--headless')
-    options.add_argument('--no-sandbox')
+    options.add_argument("--disable-extensions")
     options.add_argument("--disable-gpu")
-    options.add_argument("--disable-dev-shm-usage")
-    options.add_argument("--window-size=1920,1080")
+    options.add_argument("--headless")
     driver = webdriver.Chrome(service=service, options=options)
-    # chrome_options.arguments.append(['--no-sandbox', '--disable-dev-shm-usage', '--headless', '--disable-gpu', '--window-size=1920,1080'])
-    # driver = webdriver.Chrome(os.environ.get("CHROMEDRIVER_PATH"), options=options)
     return driver
 def update_last_num(amt):
     try:
@@ -494,10 +490,7 @@ def set_up_accts():
 def add_list(usersToAdd):
     driver = twitter_log_in()
     time.sleep(2)
-    # get_following(driver,tracking)
-    driver.get("https://twitter.com/"+user+"/lists")
-    time.sleep(2)
-    driver.find_element(by='xpath',value=listBtn).click()
+    driver.get("https://twitter.com/i/lists/create")
     time.sleep(2)
     eastern = pytz.timezone('US/Eastern')
     eastern_time = datetime.datetime.now(eastern)
@@ -516,17 +509,12 @@ def add_list(usersToAdd):
     time.sleep(2)
     for users in usersToAdd:
         print(users)
-        ele1 = driver.find_element(by='xpath',value=searchPeopleBox)
-        driver.execute_script("arguments[0].send_keys(users);", ele1)
-        if ele1:
-            ele1.send_keys(users)
-        else:
-            driver.find_element(by='xpath',value=search2).send_keys(users)
+        driver.find_element(by='xpath', value=searchPeopleBox).send_keys(users)
         time.sleep(3)
-        addMe = driver.find_element( by=By.XPATH,value=addBtnList)
+        addMe = driver.find_element(by=By.XPATH, value=addBtnList)
         driver.execute_script("arguments[0].click();", addMe)
         time.sleep(3)
-        driver.find_element(by='xpath',value=usedSerachPeople).click()
+        driver.find_element(by='xpath', value=usedSerachPeople).click()
         time.sleep(3)
     driver.find_element(by='xpath',value=doneLisatBtn).click()
     driver.quit() 

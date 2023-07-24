@@ -236,15 +236,13 @@ def logIn():
     time.sleep(2)
     return driver
 def tweetThis(tweet):
-    print("I'm inside tweetThis()",tweet)
     driver = logIn()
-    time.sleep(5)
+    time.sleep(2)
     driver.find_element(by='xpath',value=textBox).send_keys(tweet)
     time.sleep(2)
     tweetButton = '//*[@id="layers"]/div[2]/div/div/div/div/div/div[2]/div[2]/div/div/div/div[3]/div[2]/div[1]/div/div/div/div[2]/div[2]/div/div/div[2]/div[4]'
     driver.find_element(by='xpath',value=tweetButton).click()
-    time.sleep(2)
-    driver.close()
+    driver.quit()
     return "Tweeted: "+tweet
 def followList(list):
     driver = logIn()
@@ -260,10 +258,6 @@ def twitter_log_in():
     driver.get("https://twitter.com/login")
         # adjust the sleep time according to your internet speed
     time.sleep(2)
-    # find the element where we have to 
-    # enter the xpath
-    # driver.find_element.__getattribute__
-    # fill the number or mail
     driver.find_element(
         by='xpath', value=inputUser).send_keys(user)
     # find the element next button 
@@ -286,7 +280,6 @@ def twitter_log_in():
     # clicking on that element
     driver.find_element(by='xpath',value=logInBtn).click()
     # adjust the sleep time according to your internet speed
-    time.sleep(2)
     return driver
 def add_list(usersToAdd):
     driver = twitter_log_in()
@@ -540,7 +533,7 @@ def add_list(usersToAdd):
         driver.find_element(by='xpath',value=usedSerachPeople).click()
         time.sleep(3)
     driver.find_element(by='xpath',value=doneLisatBtn).click()
-    driver.close() 
+    driver.quit() 
 iterator = 0
 @app.route("/api/tweets/<path:tweetToSend>")
 def tweets(tweetToSend):

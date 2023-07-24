@@ -98,8 +98,6 @@ nextBtn = '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2
 logInBtn = '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[2]/div/div[1]/div/div/div'
 tweetBtn ='//*[@id="react-root"]/div/div/div[2]/header/div/div/div/div[1]/div[3]/a'
 addBtnList = '/html/body/div[1]/div/div/div[1]/div[2]/div/div/div/div/div/div[2]/div[2]/div/div/div/div[2]/div/div/form/div[2]/div/div[2]/div/div/div/div[2]/div/div[2]'
-doneLisatBtn="/html/body/div[1]/div/div/div[1]/div[2]/div/div/div/div/div/div[2]/div[2]/div/div/div/div[1]/div/div/div/div/div/div[3]/div/div/span/span"
-listNextBtn = '/html/body/div[1]/div/div/div[1]/div[2]/div/div/div/div/div/div[2]/div[2]/div/div/div/div[1]/div/div/div/div/div/div[3]/div/div/span/span'
 descriptionBox = '/html/body/div[1]/div/div/div[1]/div[2]/div/div/div/div/div/div[2]/div[2]/div/div/div/div[2]/div[3]/label/div/div[2]/div/textarea'
 nextBtn = '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div/div/div/div[6]/div'
 followingNum ='//*[@id="react-root"]/div/div/div[2]/main/div/div/div/div[1]/div/div[3]/div/div/div/div/div[5]/div[1]/a/span[1]/span'
@@ -228,9 +226,6 @@ def logIn():
     # clicking on that element
     driver.find_element(by='xpath',value=logInBtn).click()
     # adjust the sleep time according to your internet speed
-    time.sleep(2)
-    driver.find_element(by='xpath',value=tweetBtn).click()
-    time.sleep(2)
 def tweetThis(tweet):
     twitter_log_in()
     time.sleep(2)
@@ -469,7 +464,8 @@ def add_list(usersToAdd):
     driver.find_element(by=By.NAME,value='name').send_keys('Joes list '+datetime.datetime.now().strftime("%m-%d ")+hour_am_pm)
     driver.find_element(by=By.TAG_NAME,value='textarea').send_keys('Twitter list to follow for joe '+datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
     time.sleep(2)
-    driver.find_element(by=By.NAME,value='next').click()
+    print('all ready to go')
+    driver.find_element(by=By.PARTIAL_LINK_TEXT,value='Next').click()
     time.sleep(2)
     for users in usersToAdd:
         time.sleep(2)

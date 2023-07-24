@@ -1,1 +1,1 @@
-worker: python api.index
+web: gunicorn api.index

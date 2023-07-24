@@ -139,8 +139,8 @@ length = 0
 def load_chrome_driver():
     service = Service(executable_path=r'/usr/bin/chromedriver')
     options = webdriver.ChromeOptions()
-    # options.add_argument('--headless')
-    # options.add_argument('--no-sandbox')
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
     # options.add_argument('--disable-dev-shm-usage')
     driver = webdriver.Chrome(service=service, options=options)
     # chrome_options.arguments.append(['--no-sandbox', '--disable-dev-shm-usage', '--headless', '--disable-gpu', '--window-size=1920,1080'])

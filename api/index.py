@@ -112,7 +112,6 @@ nextBtn = '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2
 logInBtn = '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[2]/div/div[1]/div/div/div'
 tweetBtn ='//*[@id="react-root"]/div/div/div[2]/header/div/div/div/div[1]/div[3]/a'
 tweetButton = '//*[@id="layers"]/div[2]/div/div/div/div/div/div[2]/div[2]/div/div/div/div[3]/div[2]/div[1]/div/div/div/div[2]/div[2]/div/div/div[2]/div[4]'
-nameInput='/html/body/div[1]/div/div/div[1]/div[2]/div/div/div/div/div/div[2]/div[2]/div/div/div/div[2]/div[2]/label/div/div[2]/div/input'
 class Account:
     def __init__(self, account, username, description):
         self.account = account
@@ -462,13 +461,13 @@ def add_list(usersToAdd):
     twitter_log_in()
     time.sleep(2)
     driver.get("https://twitter.com/i/lists/create")
-    time.sleep(2)
     eastern = pytz.timezone('US/Eastern')
     eastern_time = datetime.datetime.now(eastern)
     # Format the time in 'HH:MM AM/PM' format
     hour_am_pm = eastern_time.strftime('%I:%M %p')
-    driver.find_element(by='xpath',value=nameInput).send_keys('Joes list '+datetime.datetime.now().strftime("%m-%d ")+hour_am_pm)
-    driver.find_element(by='xpath',value=descriptionBox).send_keys('Twitter list to follow for joe '+datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
+    time.sleep(4)
+    driver.find_element(by=By.NAME,value='name').send_keys('Joes list '+datetime.datetime.now().strftime("%m-%d ")+hour_am_pm)
+    driver.find_element(by=By.TAG_NAME,value='textarea').send_keys('Twitter list to follow for joe '+datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
     time.sleep(2)
     driver.find_element(by='xpath',value=listNextBtn).click()
     time.sleep(2)

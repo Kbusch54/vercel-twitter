@@ -228,7 +228,9 @@ def logIn():
     time.sleep(2)
     return driver
 def tweetThis(tweet):
-    driver = logIn()
+    print('tweeting this')
+    print(tweet)
+    driver = twitter_log_in()
     time.sleep(2)
     driver.find_element(by='xpath',value=textBox).send_keys(tweet)
     time.sleep(2)

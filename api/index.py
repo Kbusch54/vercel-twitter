@@ -133,6 +133,7 @@ class Account:
         }
 length = 0
 def load_chrome_driver():
+    global driver
     service = Service(executable_path=r'/usr/bin/chromedriver')
     options = webdriver.ChromeOptions()
     options.add_argument("--disable-extensions")
@@ -140,7 +141,10 @@ def load_chrome_driver():
     options.add_argument("--headless")
     options.add_argument('--no-sandbox')  
     driver = webdriver.Chrome(service=service, options=options)
-    return driver
+    driver.maximize_window()
+    driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
+    driver.execute_cdp_cmd('Network.setUserAgentOverride', {
+        "userAgent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.53 Safari/537.36'})
 def update_last_num(amt):
     try:
         supabase.table('sign').update({
@@ -156,7 +160,7 @@ def remove_at_sign(usersToAdd):
     return [user.replace("@", "") for user in usersToAdd]
 def logIn_Credentials(cred_user,cred_password):
     # create instance of Chrome webdriver
-    driver = driver = load_chrome_driver() 
+    load_chrome_driver() 
     driver.get("https://twitter.com/login")
         # adjust the sleep time according to your internet speed
     time.sleep(2)
@@ -193,7 +197,7 @@ def logIn_Credentials(cred_user,cred_password):
     return driver
 def logIn():
     # create instance of Chrome webdriver
-    driver = load_chrome_driver()  # or driver = load_chrome_driver("")
+    load_chrome_driver()
     driver.get("https://twitter.com/login")
         # adjust the sleep time according to your internet speed
     time.sleep(2)
@@ -231,7 +235,7 @@ def logIn():
 def tweetThis(tweet):
     print('tweeting this')
     print(tweet)
-    driver = twitter_log_in()
+    twitter_log_in()
     time.sleep(2)
     driver.get("https://twitter.com/compose/tweet")
     time.sleep(2)
@@ -242,7 +246,7 @@ def tweetThis(tweet):
     driver.quit()
     return "Tweeted: "+tweet
 def followList(list):
-    driver = logIn()
+    logIn()
     for user in list:
         driver.get("https://twitter.com/"+user)
         time.sleep(2)
@@ -251,7 +255,7 @@ def followList(list):
         time.sleep(2)
 def twitter_log_in():
     # create instance of Chrome webdriver
-    driver = load_chrome_driver()  # or driver = load_chrome_driver("")
+    load_chrome_driver()  # or driver = load_chrome_driver("")
     driver.get("https://twitter.com/login")
         # adjust the sleep time according to your internet speed
     time.sleep(2)
@@ -297,7 +301,7 @@ def start_process():
         print('No accounts to track')
         exit()
     print(tracking)
-    driver = twitter_log_in()
+    twitter_log_in()
     time.sleep(2)
     get_following(driver,tracking)
     driver.quit()
@@ -346,7 +350,7 @@ def update_or_insert(account, username, description, followed_by):
 
 def twitter_log_in():
     # create instance of Chrome webdriver
-    driver = load_chrome_driver()
+    load_chrome_driver()
     driver.get("https://twitter.com/login")
         # adjust the sleep time according to your internet speed
     time.sleep(2)
@@ -459,7 +463,7 @@ def set_up_accts():
         inDb.add(account.accountName)
 
 def add_list(usersToAdd):
-    driver = twitter_log_in()
+    twitter_log_in()
     time.sleep(2)
     driver.get("https://twitter.com/i/lists/create")
     time.sleep(2)

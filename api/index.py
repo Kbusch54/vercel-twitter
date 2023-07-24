@@ -561,7 +561,7 @@ def create_tweet(followList):
 @cross_origin()
 def create_list():
     print("I'm inside create_list()")
-    print('request object'+request.json)
+    print(request.json)
     data = request.json # 'request' is part of the flask module
     usersToAdd = remove_at_sign(data)
     add_list(usersToAdd)

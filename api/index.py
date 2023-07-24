@@ -465,12 +465,6 @@ def add_list(usersToAdd):
     time.sleep(2)
     eastern = pytz.timezone('US/Eastern')
     eastern_time = datetime.datetime.now(eastern)
-    # Define the Eastern Time Zone
-    eastern = pytz.timezone('US/Eastern')
-
-    # Get the current time in Eastern Time Zone
-    eastern_time = datetime.datetime.now(eastern)
-
     # Format the time in 'HH:MM AM/PM' format
     hour_am_pm = eastern_time.strftime('%I:%M %p')
     driver.find_element(by='xpath',value=nameInput).send_keys('Joes list '+datetime.datetime.now().strftime("%m-%d ")+hour_am_pm)
@@ -479,15 +473,12 @@ def add_list(usersToAdd):
     driver.find_element(by='xpath',value=listNextBtn).click()
     time.sleep(2)
     for users in usersToAdd:
-        print(users)
+        time.sleep(2)
         driver.find_element(by='xpath', value=searchPeopleBox).send_keys(users)
         time.sleep(3)
-        addMe = driver.find_element(by=By.XPATH, value=addBtnList)
-        driver.execute_script("arguments[0].click();", addMe)
+        driver.execute_script("arguments[0].click();", driver.find_element(by=By.XPATH, value=addBtnList))
         time.sleep(3)
         driver.find_element(by='xpath', value=usedSerachPeople).click()
-        time.sleep(3)
-    driver.find_element(by='xpath',value=doneLisatBtn).click()
     driver.quit() 
 iterator = 0
 @app.route("/api/tweets/<path:tweetToSend>")
@@ -522,4 +513,3 @@ iterator =0
 
 if __name__ == '__main__':
     app.run_server(debug=True, use_reloader=False )
-    print('HI meesh')

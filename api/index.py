@@ -176,7 +176,7 @@ def remove_at_sign(usersToAdd):
     return [user.replace("@", "") for user in usersToAdd]
 def logIn_Credentials(cred_user,cred_password):
     # create instance of Chrome webdriver
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options) 
+    driver = driver = load_chrome_driver() 
     driver.get("https://twitter.com/login")
         # adjust the sleep time according to your internet speed
     time.sleep(2)
@@ -269,7 +269,7 @@ def followList(list):
         time.sleep(2)
 def twitter_log_in():
     # create instance of Chrome webdriver
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    driver = load_chrome_driver()  # or driver = load_chrome_driver("")
     driver.get("https://twitter.com/login")
         # adjust the sleep time according to your internet speed
     time.sleep(2)
@@ -403,7 +403,7 @@ def update_or_insert(account, username, description, followed_by):
 
 def twitter_log_in():
     # create instance of Chrome webdriver
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    driver = load_chrome_driver()
     driver.get("https://twitter.com/login")
         # adjust the sleep time according to your internet speed
     time.sleep(2)

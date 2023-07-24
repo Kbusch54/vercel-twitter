@@ -3,6 +3,7 @@ import logging
 import re
 from flask import Flask, jsonify
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 import time
@@ -461,14 +462,25 @@ def add_list(usersToAdd):
     # Format the time in 'HH:MM AM/PM' format
     hour_am_pm = eastern_time.strftime('%I:%M %p')
     time.sleep(4)
-    driver.find_element(by=By.NAME,value='name').send_keys('Joes list '+datetime.datetime.now().strftime("%m-%d ")+hour_am_pm)
-    driver.find_element(by=By.TAG_NAME,value='textarea').send_keys('Twitter list to follow for joe '+datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
+    modal =driver.find_element(by=By.XPATH,value='/html/body/div[1]/div/div/div[1]/div[2]/div/div/div/div/div/div[2]/div[2]')
+    modal.send_keys(Keys.TAB)
+    modal.send_keys(Keys.TAB)
+    modal.send_keys(Keys.TAB)
+    # driver.find_element(by=By.NAME,value='name')
+    modal.send_keys('Joes list '+datetime.datetime.now().strftime("%m-%d ")+hour_am_pm)
+    modal.send_keys(Keys.TAB)
+    # driver.find_element(by=By.TAG_NAME,value='textarea')
+    modal.send_keys('Twitter list to follow for joe '+datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
     time.sleep(2)
+    modal.send_keys(Keys.TAB)
+    modal.send_keys(Keys.TAB)
+    modal.send_keys(Keys.TAB)
+    modal.send_keys(Keys.ENTER)
     print('all ready to go')
-    nextBtnC = driver.find_element(by=By.XPATH,value=listNextBtn)
-    driver.execute_script("arguments[0].click();", nextBtnC)
-    time.sleep(2)
+    # nextBtnC = driver.find_element(by=By.XPATH,value=listNextBtn)
+    # driver.execute_script("arguments[0].click();", nextBtnC)
     for users in usersToAdd:
+        print(users)
         time.sleep(2)
         driver.find_element(by='xpath', value=searchPeopleBox).send_keys(users)
         time.sleep(3)

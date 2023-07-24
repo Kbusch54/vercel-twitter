@@ -534,8 +534,8 @@ def tweets(tweetToSend):
 
 logging.getLogger('flask_cors').level = logging.DEBUG
 @app.route("/api/logIn")
-def logIn():
-    driver = logIn_Credentials(user,passwrd)
+def logIn_yes():
+    logIn()
     return 'logged in'
 @app.route("/api/follow/<path:followList>")
 def create_tweet(followList):

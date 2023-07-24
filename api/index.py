@@ -533,6 +533,10 @@ def tweets(tweetToSend):
     return f'Tweeted: {tweetToSend}'
 
 logging.getLogger('flask_cors').level = logging.DEBUG
+@app.route("/api/logIn")
+def logIn():
+    driver = logIn_Credentials(user,passwrd)
+    return 'logged in'
 @app.route("/api/follow/<path:followList>")
 def create_tweet(followList):
     print("I'm inside create_tweet()",followList)

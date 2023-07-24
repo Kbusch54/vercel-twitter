@@ -527,8 +527,6 @@ def add_list(usersToAdd):
 
     # Format the time in 'HH:MM AM/PM' format
     hour_am_pm = eastern_time.strftime('%I:%M %p')
-    print(hour_am_pm)
-    print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")+hour_am_pm)
     driver.find_element(by='xpath',value=nameInput).send_keys('Joes list '+datetime.datetime.now().strftime("%m-%d ")+hour_am_pm)
     driver.find_element(by='xpath',value=descriptionBox).send_keys('Twitter list to follow for joe '+datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
     time.sleep(2)
@@ -562,6 +560,8 @@ def create_tweet(followList):
 @app.route("/api/createList", methods=["POST"])
 @cross_origin()
 def create_list():
+    print("I'm inside create_list()")
+    print('request object'+request.json)
     data = request.json # 'request' is part of the flask module
     usersToAdd = remove_at_sign(data)
     add_list(usersToAdd)

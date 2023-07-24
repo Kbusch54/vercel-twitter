@@ -5,16 +5,12 @@ from flask import Flask, jsonify
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
 import time
 import pytz
-from apscheduler.schedulers.background import BackgroundScheduler
 from flask import request
 from flask_cors import CORS, cross_origin
 from dotenv import load_dotenv
 from supabase import create_client, Client
-import chromedriver_autoinstaller
 
 
 import os
@@ -319,8 +315,6 @@ def add_list(usersToAdd):
 
     # Format the time in 'HH:MM AM/PM' format
     hour_am_pm = eastern_time.strftime('%I:%M %p')
-    print(hour_am_pm)
-    print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")+hour_am_pm)
     driver.find_element(by='xpath',value=nameInput).send_keys('Joes list '+datetime.datetime.now().strftime("%m-%d ")+hour_am_pm)
     driver.find_element(by='xpath',value=descriptionBox).send_keys('Twitter list to follow for joe '+datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
     time.sleep(2)
@@ -328,10 +322,10 @@ def add_list(usersToAdd):
     time.sleep(2)
     for users in usersToAdd:
         driver.find_element(by='xpath',value=searchPeopleBox).send_keys(users)
-        time.sleep(3)
+        time.sleep(2)
         addMe = driver.find_element( by=By.XPATH,value=addBtnList)
         driver.execute_script("arguments[0].click();", addMe)
-        time.sleep(3)
+        time.sleep(2)
         driver.find_element(by='xpath',value=usedSerachPeople).click()
         time.sleep(2)
     driver.find_element(by='xpath',value=doneLisatBtn).click()

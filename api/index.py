@@ -373,7 +373,7 @@ def twitter_log_in():
     time.sleep(2)
     return driver
 
-def get_following(driver,trackers):
+def get_following(trackers):
     for tracked in trackers:
         # new driver new url
         url = f"https://twitter.com/{tracked}/following"
@@ -414,7 +414,7 @@ def get_following(driver,trackers):
                             if accountName in seen or accountName == '':
                                 continue
                             description = e.text[e.text.find('Follow'):].replace('Follow\n','',1)
-                            if description == '':
+                            if description == '' or description == 'Follow' or description == 'Follow\n':
                                 seen.add(accountName)
                                 continue
                             if accountName in doubled:

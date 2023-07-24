@@ -563,6 +563,8 @@ def create_list():
     print("I'm inside create_list()")
     print(request.json)
     data = request.json # 'request' is part of the flask module
+    for key, value in data.items():
+        print(key, '->', value)
     usersToAdd = remove_at_sign(data)
     add_list(usersToAdd)
     return {"success": True}, 200

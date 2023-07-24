@@ -533,13 +533,14 @@ def add_list(usersToAdd):
     driver.find_element(by='xpath',value=listNextBtn).click()
     time.sleep(2)
     for users in usersToAdd:
+        print(users)
         driver.find_element(by='xpath',value=searchPeopleBox).send_keys(users)
         time.sleep(3)
         addMe = driver.find_element( by=By.XPATH,value=addBtnList)
         driver.execute_script("arguments[0].click();", addMe)
         time.sleep(3)
         driver.find_element(by='xpath',value=usedSerachPeople).click()
-        time.sleep(2)
+        time.sleep(3)
     driver.find_element(by='xpath',value=doneLisatBtn).click()
     driver.close() 
 iterator = 0
@@ -560,8 +561,6 @@ def create_tweet(followList):
 @app.route("/api/createList", methods=["POST"])
 @cross_origin()
 def create_list():
-    print("I'm inside create_list()")
-    print(request.json)
     data = request.json # 'request' is part of the flask module
     for key, value in data.items():
         print(key, '->', value)

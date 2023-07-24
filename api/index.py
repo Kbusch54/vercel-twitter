@@ -13,7 +13,6 @@ from flask_cors import CORS, cross_origin
 from dotenv import load_dotenv
 from supabase import create_client, Client
 
-
 import os
 dotenv_path = '../.env'
 load_dotenv(dotenv_path=dotenv_path)
@@ -476,7 +475,10 @@ def add_list(usersToAdd):
         driver.find_element(by='xpath', value=searchPeopleBox).send_keys(users)
         time.sleep(3)
         addMe = driver.find_element(by=By.XPATH, value=addBtnList)
-        driver.execute_script("arguments[0].click();", addMe)
+        if addMe.is_displayed():
+            driver.execute_script("arguments[0].click();", addMe)
+        else:
+            driver.find_element(by=By.LINK_TEXT, value='Add').click()
         time.sleep(3)
         driver.find_element(by='xpath', value=usedSerachPeople).click()
     driver.quit() 

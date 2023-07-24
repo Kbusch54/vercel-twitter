@@ -465,7 +465,8 @@ def add_list(usersToAdd):
     driver.find_element(by=By.TAG_NAME,value='textarea').send_keys('Twitter list to follow for joe '+datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
     time.sleep(2)
     print('all ready to go')
-    driver.find_element(by=By.PARTIAL_LINK_TEXT,value='Next').click()
+    nextBtnC = driver.find_element(by=By.XPATH,value=listNextBtn)
+    driver.execute_script("arguments[0].click();", nextBtnC)
     time.sleep(2)
     for users in usersToAdd:
         time.sleep(2)

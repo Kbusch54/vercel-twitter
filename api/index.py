@@ -164,7 +164,7 @@ def load_chrome_driver():
 def update_last_num(amt):
     try:
         supabase.table('sign').update({
-            'last_updated': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            'last_updated': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             'new_amount': amt
         }).eq('id', 2).execute()
     except (Exception) as error:
@@ -310,19 +310,19 @@ def add_list(usersToAdd):
     driver.find_element(by='xpath',value=listBtn).click()
     time.sleep(2)
     eastern = pytz.timezone('US/Eastern')
-    eastern_time = datetime.now(eastern)
+    eastern_time = datetime.datetime.now(eastern)
     # Define the Eastern Time Zone
     eastern = pytz.timezone('US/Eastern')
 
     # Get the current time in Eastern Time Zone
-    eastern_time = datetime.now(eastern)
+    eastern_time = datetime.datetime.now(eastern)
 
     # Format the time in 'HH:MM AM/PM' format
     hour_am_pm = eastern_time.strftime('%I:%M %p')
     print(hour_am_pm)
-    print(datetime.now().strftime("%Y-%m-%d %H:%M")+hour_am_pm)
-    driver.find_element(by='xpath',value=nameInput).send_keys('Joes list '+datetime.now().strftime("%m-%d ")+hour_am_pm)
-    driver.find_element(by='xpath',value=descriptionBox).send_keys('Twitter list to follow for joe '+datetime.now().strftime("%Y-%m-%d %H:%M"))
+    print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")+hour_am_pm)
+    driver.find_element(by='xpath',value=nameInput).send_keys('Joes list '+datetime.datetime.now().strftime("%m-%d ")+hour_am_pm)
+    driver.find_element(by='xpath',value=descriptionBox).send_keys('Twitter list to follow for joe '+datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
     time.sleep(2)
     driver.find_element(by='xpath',value=listNextBtn).click()
     time.sleep(2)
@@ -385,7 +385,7 @@ def update_or_insert(account, username, description, followed_by):
         if account in inDb:
             supabase.table('Followed').update({
                 'followed_by': followed_by,
-                'updated_at': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                'updated_at': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             }).eq('account', account).execute()
         else:
             supabase.table('Followed').insert({
@@ -393,7 +393,7 @@ def update_or_insert(account, username, description, followed_by):
                 'username': username,
                 'description': description,
                 'followed_by': followed_by,
-                'created_at': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                'created_at': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             }).execute()
     except (Exception) as error:
         print ("Error while connecting to PostgreSQL", error)
@@ -524,19 +524,19 @@ def add_list(usersToAdd):
     driver.find_element(by='xpath',value=listBtn).click()
     time.sleep(2)
     eastern = pytz.timezone('US/Eastern')
-    eastern_time = datetime.now(eastern)
+    eastern_time = datetime.datetime.now(eastern)
     # Define the Eastern Time Zone
     eastern = pytz.timezone('US/Eastern')
 
     # Get the current time in Eastern Time Zone
-    eastern_time = datetime.now(eastern)
+    eastern_time = datetime.datetime.now(eastern)
 
     # Format the time in 'HH:MM AM/PM' format
     hour_am_pm = eastern_time.strftime('%I:%M %p')
     print(hour_am_pm)
-    print(datetime.now().strftime("%Y-%m-%d %H:%M")+hour_am_pm)
-    driver.find_element(by='xpath',value=nameInput).send_keys('Joes list '+datetime.now().strftime("%m-%d ")+hour_am_pm)
-    driver.find_element(by='xpath',value=descriptionBox).send_keys('Twitter list to follow for joe '+datetime.now().strftime("%Y-%m-%d %H:%M"))
+    print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")+hour_am_pm)
+    driver.find_element(by='xpath',value=nameInput).send_keys('Joes list '+datetime.datetime.now().strftime("%m-%d ")+hour_am_pm)
+    driver.find_element(by='xpath',value=descriptionBox).send_keys('Twitter list to follow for joe '+datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
     time.sleep(2)
     driver.find_element(by='xpath',value=listNextBtn).click()
     time.sleep(2)

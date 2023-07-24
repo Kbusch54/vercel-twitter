@@ -477,8 +477,10 @@ def add_list(usersToAdd):
         try:
             addMe = driver.find_element(by=By.XPATH, value=addBtnList)
             if addMe.is_displayed():
+                print('og method')
                 driver.execute_script("arguments[0].click();", addMe)
             else:
+                print('other method')
                 driver.find_element(by=By.LINK_TEXT, value='Add').click()
         except:
             print('not found')
@@ -490,7 +492,10 @@ iterator = 0
 def tweets(tweetToSend):
     tweetThis(tweetToSend)
     return f'Tweeted: {tweetToSend}'
-
+@app.route("/api/start")
+def start():
+    start_process()
+    return 'done'
 logging.getLogger('flask_cors').level = logging.DEBUG
 @app.route("/api/logIn")
 def logIn_yes():

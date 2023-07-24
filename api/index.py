@@ -142,18 +142,24 @@ class Account:
         }
 length = 0
 def load_chrome_driver():
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
-    chrome_options.add_argument('--headless')
-    options = Options()
-    options.add_argument("--disable-extensions")
-    options.add_argument("--disable-gpu")
-    options.add_argument("--no-sandbox") # linux only
-    options.add_argument("--headless")
-    options.add_argument("--start-maximized")
-    options._binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+    # chrome_options = webdriver.ChromeOptions()
+    # chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+    # chrome_options.add_argument('--headless')
+    # options = Options()
+    # options.add_argument("--disable-extensions")
+    # options.add_argument("--disable-gpu")
+    # options.add_argument("--no-sandbox") # linux only
+    # options.add_argument("--headless")
+    # options.add_argument("--start-maximized")
+    # options._binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+    service = Service(executable_path=r'/usr/bin/chromedriver')
+    options = webdriver.ChromeOptions()
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+    driver = webdriver.Chrome(service=service, options=options)
     # chrome_options.arguments.append(['--no-sandbox', '--disable-dev-shm-usage', '--headless', '--disable-gpu', '--window-size=1920,1080'])
-    driver = webdriver.Chrome(os.environ.get("CHROMEDRIVER_PATH"), options=options)
+    # driver = webdriver.Chrome(os.environ.get("CHROMEDRIVER_PATH"), options=options)
     return driver
 def update_last_num(amt):
     try:

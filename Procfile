@@ -1,1 +1,1 @@
-web: gunicorn api.index:app --timeout 120000
+web: gunicorn --preload api.index:app --timeout 120000

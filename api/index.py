@@ -474,11 +474,14 @@ def add_list(usersToAdd):
         time.sleep(2)
         driver.find_element(by='xpath', value=searchPeopleBox).send_keys(users)
         time.sleep(3)
-        addMe = driver.find_element(by=By.XPATH, value=addBtnList)
-        if addMe.is_displayed():
-            driver.execute_script("arguments[0].click();", addMe)
-        else:
-            driver.find_element(by=By.LINK_TEXT, value='Add').click()
+        try:
+            addMe = driver.find_element(by=By.XPATH, value=addBtnList)
+            if addMe.is_displayed():
+                driver.execute_script("arguments[0].click();", addMe)
+            else:
+                driver.find_element(by=By.LINK_TEXT, value='Add').click()
+        except:
+            print('not found')
         time.sleep(3)
         driver.find_element(by='xpath', value=usedSerachPeople).click()
     driver.quit() 

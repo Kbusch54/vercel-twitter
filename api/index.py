@@ -293,7 +293,7 @@ def start_process():
     print(tracking)
     twitter_log_in()
     time.sleep(2)
-    get_following(driver,tracking)
+    get_following(tracking)
     driver.quit()
     add_accounts_to_db()
     print('done')

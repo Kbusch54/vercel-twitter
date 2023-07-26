@@ -274,15 +274,15 @@ def twitter_log_in():
     return driver
 
 def start_process():
-    accounts = get_all_accounts()
-    global length
-    for account in accounts:
-        acc = Account(account['account'], account['username'], account['description'])
-        acc.followed_by = account['followed_by']
-        all_accounts[account['account']] = acc
-        doubled.add(account['account'])
-        inDb.add(account['account'])
-    length = len(all_accounts)
+    # accounts = get_all_accounts()
+    # global length
+    # for account in accounts:
+    #     acc = Account(account['account'], account['username'], account['description'])
+    #     acc.followed_by = account['followed_by']
+    #     all_accounts[account['account']] = acc
+    #     doubled.add(account['account'])
+    #     inDb.add(account['account'])
+    # length = len(all_accounts)
     trackers = get_All_Tracked()
     tracking = []
     for tracked in trackers.data:
@@ -319,19 +319,13 @@ def get_all_accounts():
             print("PostgreSQL connection is closed")
 def update_or_insert(account, username, description, followed_by):
     try:
-        if account in inDb:
-            supabase.table('Followed').update({
-                'followed_by': followed_by,
-                'updated_at': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            }).eq('account', account).execute()
-        else:
-            supabase.table('Followed').insert({
-                'account': account,
-                'username': username,
-                'description': description,
-                'followed_by': followed_by,
-                'created_at': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            }).execute()
+        supabase.table('Followed').upsert({
+            'account': account,
+            'username': username,
+            'description': description,
+            'followed_by': followed_by,
+            'updated_at': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        }).execute()
     except (Exception) as error:
         print ("Error while connecting to PostgreSQL", error)
     finally:
@@ -426,7 +420,6 @@ def get_following(trackers):
                                 acc.add_follower(tracked)
                                 all_accounts[accountName] = acc
                             seen.add(accountName)
-                            doubled.add(accountName)
                         except Exception as e:
                             # print('error FOR BOBBY JONES')
                             continue  
@@ -442,15 +435,16 @@ def add_accounts_to_db():
         accounts = account.account
         update_or_insert(accounts, username, description, followed_by)
     global length
-    update_last_num(len(all_accounts)-length)
-def set_up_accts():
-    accounts = get_all_accounts()
-    for account in accounts:
-        acc = Account(account['account'], account['username'], account['description'])
-        acc.followed_by = account['followed_by']
-        all_accounts[account['account']] = acc
-        doubled.add(account.accountName)
-        inDb.add(account.accountName)
+    print(len(all_accounts))
+    update_last_num(len(all_accounts))
+# def set_up_accts():
+#     accounts = get_all_accounts()
+#     for account in accounts:
+#         acc = Account(account['account'], account['username'], account['description'])
+#         acc.followed_by = account['followed_by']
+#         all_accounts[account['account']] = acc
+#         doubled.add(account.accountName)
+#         inDb.add(account.accountName)
 
 def add_list(usersToAdd):
     twitter_log_in()

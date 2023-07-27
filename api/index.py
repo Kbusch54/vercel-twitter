@@ -306,8 +306,7 @@ def start_process():
     driver.quit()
     print('done')
 def scrape_and_push_data(tracker):
-        acc = get_following(tracker)
-        every_account.update(acc)
+    get_following(tracker)
 def get_All_Tracked():
     accounts = None
     try:
@@ -430,6 +429,7 @@ def get_following(tracker):
                             # print('error FOR BOBBY JONES')
                             continue  
         except:
+            every_account.update(all_accounts)
             return all_accounts
 def add_accounts_to_db(all_accounts):
     for account in all_accounts.values():

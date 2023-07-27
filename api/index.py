@@ -295,7 +295,7 @@ def start_process():
         if(len(tracked['account']) == 0):
             print('No accounts to track')
             exit()
-    with ThreadPoolExecutor() as executor:
+    with ThreadPoolExecutor(max_workers=10) as executor:
         executor.map(scrape_and_push_data, tracking)
     print('done with scraping')
     print(every_account)

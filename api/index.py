@@ -12,6 +12,7 @@ from flask import request
 from flask_cors import CORS, cross_origin
 from dotenv import load_dotenv
 from supabase import create_client, Client
+from webdriver_manager.chrome import ChromeDriverManager
 from concurrent.futures import ThreadPoolExecutor
 import requests
 
@@ -143,9 +144,11 @@ def load_chrome_driver():
     options.add_argument("--window-size=1920,1080")
     driver = webdriver.Chrome(service=service, options=options)
     driver.maximize_window()
-    driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
-    driver.execute_cdp_cmd('Network.setUserAgentOverride', {
-        "userAgent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'})
+    driver = webdriver.Chrome(
+    options=options, executable_path=ChromeDriverManager().install())
+    # driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
+    # driver.execute_cdp_cmd('Network.setUserAgentOverride', {
+    #     "userAgent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'})
 def update_last_num(amt):
     try:
         supabase.table('sign').update({

@@ -12,6 +12,8 @@ from flask import request
 from flask_cors import CORS, cross_origin
 from dotenv import load_dotenv
 from supabase import create_client, Client
+from concurrent.futures import ThreadPoolExecutor
+import requests
 
 import os
 dotenv_path = '../.env'
@@ -285,21 +287,23 @@ def start_process():
     # length = len(all_accounts)
     trackers = get_All_Tracked()
     tracking = []
-    print(tracking)
+    print(trackers)
     twitter_log_in()
+    
     for tracked in trackers.data:
         tracking.append(tracked['account'])
         if(len(tracked['account']) == 0):
             print('No accounts to track')
             exit()
-        time.sleep(2)
-        get_following(tracked['account'])
-        add_accounts_to_db()
-        all_accounts.clear()
-        print('cycle complet for', tracked['account'])
+    with ThreadPoolExecutor() as executor:
+        executor.map(scrape_and_push_data, tracking)
     driver.quit()
     print('done')
-
+def scrape_and_push_data(tracker):
+        acc = get_following(tracker)
+        add_accounts_to_db(acc)
+        all_accounts.clear()
+        print('cycle complet for', tracker)
 def get_All_Tracked():
     try:
         accounts = supabase.table('Tracking').select("account").execute()
@@ -420,8 +424,9 @@ def get_following(tracker):
                             # print('error FOR BOBBY JONES')
                             continue  
         except:
-            print('complete')
-def add_accounts_to_db():
+            print('complete a loop for get following')
+            return all_accounts
+def add_accounts_to_db(all_accounts):
     for account in all_accounts.values():
         username = account.username
         description = account.description

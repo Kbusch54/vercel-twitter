@@ -295,18 +295,19 @@ def start_process():
         if(len(tracked['account']) == 0):
             print('No accounts to track')
             exit()
-    with ThreadPoolExecutor(max_workers=10) as executor:
-        executor.map(scrape_and_push_data, tracking)
+    twitter_log_in()
+    # with ThreadPoolExecutor(max_workers=10) as executor:
+    #     executor.map(scrape_and_push_data(), tracking)
+    for tracker in tracking:
+        scrape_and_push_data(tracker)
     print('done with scraping')
     print(every_account)
     add_accounts_to_db(every_account)
     driver.quit()
     print('done')
 def scrape_and_push_data(tracker):
-        twitter_log_in()
         acc = get_following(tracker)
         every_account.update(acc)
-        driver.quit()
 def get_All_Tracked():
     accounts = None
     try:

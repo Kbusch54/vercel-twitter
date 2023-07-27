@@ -133,7 +133,7 @@ class Account:
 length = 0
 def load_chrome_driver():
     global driver
-    service = Service(executable_path=r'/usr/bin/chromedriver')
+    service = Service(executable_path=r'/usr/bin/chromedriver',load_chrome_driver=True)
     options = webdriver.ChromeOptions()
     options.add_argument("--disable-extensions")
     options.add_argument("--disable-gpu")

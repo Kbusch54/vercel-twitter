@@ -276,14 +276,14 @@ def twitter_log_in():
     return driver
 every_account = {}  
 def start_process():
-    # accounts = get_all_accounts()
-    # global length
-    # for account in accounts:
-    #     acc = Account(account['account'], account['username'], account['description'])
-    #     acc.followed_by = account['followed_by']
-    #     all_accounts[account['account']] = acc
-    #     doubled.add(account['account'])
-    #     inDb.add(account['account'])
+    accounts = get_all_accounts()
+    global length
+    for account in accounts:
+        # acc = Account(account['account'], account['username'], account['description'])
+        # acc.followed_by = account['followed_by']
+        # all_accounts[account['account']] = acc
+        # doubled.add(account['account'])
+        inDb.add(account['account'])
     # length = len(all_accounts)
     trackers = get_All_Tracked()
     tracking = []
@@ -415,7 +415,7 @@ def get_following(tracker):
                         try:
                             usernameForAcc = e.text[0:e.text.find('@')]
                             accountName = e.text[e.text.find('@'):e.text.find('Follow')-1]
-                            if accountName in seen or accountName == '':
+                            if accountName in seen or accountName == '' or accountName == 'Follow' or accountName == 'Follow\n' or accountName in inDb:
                                 continue
                             description = e.text[e.text.find('Follow'):].replace('Follow\n','',1)
                             if description == '' or description == 'Follow' or description == 'Follow\n':

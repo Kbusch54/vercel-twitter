@@ -274,7 +274,7 @@ def twitter_log_in():
     driver.find_element(by='xpath',value=logInBtn).click()
     # adjust the sleep time according to your internet speed
     return driver
-
+every_account = {}  
 def start_process():
     # accounts = get_all_accounts()
     # global length
@@ -297,11 +297,12 @@ def start_process():
             exit()
     with ThreadPoolExecutor() as executor:
         executor.map(scrape_and_push_data, tracking)
+    add_accounts_to_db(every_account)
     driver.quit()
     print('done')
 def scrape_and_push_data(tracker):
         acc = get_following(tracker)
-        add_accounts_to_db(acc)
+        every_account.update(acc)
         print('cycle complet for', tracker)
 def get_All_Tracked():
     try:

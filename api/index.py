@@ -23,7 +23,7 @@ user = os.getenv('TWITTER_USER')
 username = os.getenv('TWITTER_USERNAME')
 passwrd = os.getenv('TWITTER_PASSWORD')
 doubled = set()
-all_accounts = {}
+
 inDb = set()
 url: str = os.getenv('SUPABASE_URL')
 key: str = os.getenv('SUPABASE_KEY')
@@ -302,7 +302,6 @@ def start_process():
 def scrape_and_push_data(tracker):
         acc = get_following(tracker)
         add_accounts_to_db(acc)
-        all_accounts.clear()
         print('cycle complet for', tracker)
 def get_All_Tracked():
     try:
@@ -378,6 +377,7 @@ def get_following(tracker):
         url = f"https://twitter.com/{tracker}/following"
         driver.get(url)
         time.sleep(2)
+        all_accounts = {}
         # Determine the height of the viewport
         viewport_height = driver.execute_script("return window.innerHeight")
 
@@ -428,6 +428,7 @@ def get_following(tracker):
             return all_accounts
 def add_accounts_to_db(all_accounts):
     for account in all_accounts.values():
+        print('aacount in dbadd',account.account)
         username = account.username
         description = account.description
         followed_by = account.followed_by

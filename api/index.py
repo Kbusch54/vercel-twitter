@@ -14,7 +14,6 @@ from dotenv import load_dotenv
 from supabase import create_client, Client
 from concurrent.futures import ThreadPoolExecutor
 import requests
-import pyautogui
 
 import os
 dotenv_path = '../.env'
@@ -289,7 +288,7 @@ def start_process():
     trackers = get_All_Tracked()
     tracking = []
     print(trackers)
-    twitter_log_in()
+    
     
     for tracked in trackers.data:
         tracking.append(tracked['account'])
@@ -304,8 +303,10 @@ def start_process():
     driver.quit()
     print('done')
 def scrape_and_push_data(tracker):
+        twitter_log_in()
         acc = get_following(tracker)
         every_account.update(acc)
+        driver.quit()
 def get_All_Tracked():
     accounts = None
     try:
@@ -378,8 +379,6 @@ def twitter_log_in():
 
 def get_following(tracker):
         # new driver new url
-        pyautogui.hotkey('ctrl', 't') # This will open a new tab
-        driver.switch_to.window(driver.window_handles[-1])
         url = f"https://twitter.com/{tracker}/following"
         driver.get(url)
         time.sleep(2)

@@ -309,6 +309,7 @@ def start_process():
     driver.quit()
     print('done')
 def scrape_and_push_data(tracker):
+    print('starting to get follows for '+tracker)
     get_following(tracker)
 def get_All_Tracked():
     accounts = None

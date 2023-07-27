@@ -297,22 +297,24 @@ def start_process():
             exit()
     with ThreadPoolExecutor() as executor:
         executor.map(scrape_and_push_data, tracking)
+    print('done with scraping')
+    print(every_account)
     add_accounts_to_db(every_account)
     driver.quit()
     print('done')
 def scrape_and_push_data(tracker):
         acc = get_following(tracker)
         every_account.update(acc)
-        print('cycle complet for', tracker)
 def get_All_Tracked():
+    accounts = None
     try:
         accounts = supabase.table('Tracking').select("account").execute()
-        return accounts
-    except (Exception) as error:
-        print ("Error while connecting to PostgreSQL", error)
+    except Exception as error:
+        print("Error while connecting to PostgreSQL", error)
     finally:
-        if(accounts):
+        if accounts:
             print("PostgreSQL connection is closed")
+    return accounts
 def get_all_accounts():
     try:
         accounts = supabase.table('Followed').select("*").execute()
@@ -425,11 +427,9 @@ def get_following(tracker):
                             # print('error FOR BOBBY JONES')
                             continue  
         except:
-            print('complete a loop for get following')
             return all_accounts
 def add_accounts_to_db(all_accounts):
     for account in all_accounts.values():
-        print('aacount in dbadd',account.account)
         username = account.username
         description = account.description
         followed_by = account.followed_by

@@ -286,12 +286,12 @@ def start_process():
     trackers = get_All_Tracked()
     tracking = []
     print(tracking)
+    twitter_log_in()
     for tracked in trackers.data:
         tracking.append(tracked['account'])
         if(len(tracked['account']) == 0):
             print('No accounts to track')
             exit()
-        twitter_log_in()
         time.sleep(2)
         get_following(tracked['account'])
         add_accounts_to_db()

@@ -143,11 +143,11 @@ def load_chrome_driver():
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument("--window-size=1920,1080")
     options.add_argument('--disable-software-rasterizer')
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager(version=r'/usr/bin/chromedriver').install()), options=options)
-    # driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    # driver = webdriver.Chrome(service=Service(ChromeDriverManager(version=r'/usr/bin/chromedriver').install()), options=options)
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     # driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
-    # driver.execute_cdp_cmd('Network.setUserAgentOverride', {
-    #     "userAgent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'})
+    driver.execute_cdp_cmd('Network.setUserAgentOverride', {
+        "userAgent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'})
 def update_last_num(amt):
     try:
         supabase.table('sign').update({
@@ -305,7 +305,7 @@ def start_process():
     for tracker in tracking:
         scrape_and_push_data(tracker)
     print('done with scraping')
-    print(every_account)
+    print(len(every_account))
     add_accounts_to_db(every_account)
     driver.quit()
     print('done')
@@ -315,7 +315,7 @@ def scrape_and_push_data(tracker):
 def get_All_Tracked():
     accounts = None
     try:
-        accounts = supabase.table('Tracking').select("account").execute()
+        accounts = supabase.table('Tracking').select("account").order(column='created_at',desc=True).execute()
     except Exception as error:
         print("Error while connecting to PostgreSQL", error)
     finally:
@@ -345,7 +345,7 @@ def update_or_insert(account, username, description, followed_by):
         print ("Error while connecting to PostgreSQL", error)
     finally:
         if(account):
-            print("PostgreSQL connection is closed and completed")
+            print("Added to Database")
 
 def twitter_log_in():
     # create instance of Chrome webdriver
@@ -382,31 +382,33 @@ def twitter_log_in():
     time.sleep(2)
     return driver
 
+    split_record = record.split("@")
+    
+    if len(split_record) < 3:  
+        print("There is no second '@' account in this record.")
+        return "@" + split_record[1]
+    
+    # Add '@' back to the front
+    return "@" + split_record[2][split_record[2]:split_record[2].find('Follow')-1]
 def get_following(tracker):
         # new driver new url
+        time.sleep(2)
         url = f"https://twitter.com/{tracker}/following"
         driver.get(url)
         time.sleep(2)
         all_accounts = {}
         # Determine the height of the viewport
         viewport_height = driver.execute_script("return window.innerHeight")
-
         # Determine the height of the entire document
         document_height = driver.execute_script("return document.documentElement.scrollHeight")
-
         # Calculate the number of scrolls needed
         num_scrolls = document_height // viewport_height
-    
-        # with open("davhsu.txt", "r",encoding="utf-8") as file:
-            # lines = file.readlines()
-            # iterator = int(lines[3])  # Ind
-    
+        seen = set()
         try:
-            seen = set()
             for _ in range(num_scrolls):
-                time.sleep(1)
                 # Scroll down to the bottom
                 driver.execute_script("window.scrollBy(0, arguments[0])", viewport_height)
+                time.sleep(0.5)
                 # Capture the elements
                 elemnt = driver.find_element(
                 by='xpath',
@@ -414,12 +416,11 @@ def get_following(tracker):
                 )
                 # accounts = elemnt.find_elements(By.CSS_SELECTOR, '.css-1dbjc4n.r-18u37iz')
                 fullacc = elemnt.find_elements(By.CSS_SELECTOR, '[data-testid="cellInnerDiv"]')
-                time.sleep(1)
                 for e in fullacc:
-                    if isinstance(e, webdriver.remote.webelement.WebElement): 
+                    if isinstance(e, webdriver.remote.webelement.WebElement):
                         try:
-                            usernameForAcc = e.text[0:e.text.find('@')]
-                            accountName = e.text[e.text.find('@'):e.text.find('Follow')-1]
+                            usernameForAcc = e.text[0:e.text.find('\n')]
+                            accountName = e.text[e.text.find(usernameForAcc)+1:e.text.find('Follow')-1].split('\n')[1]
                             if accountName in seen or accountName == '' or accountName == 'Follow' or accountName == 'Follow\n' or accountName in inDb:
                                 continue
                             description = e.text[e.text.find('Follow'):].replace('Follow\n','',1)
@@ -431,12 +432,12 @@ def get_following(tracker):
                             all_accounts[accountName] = acc
                             seen.add(accountName)
                         except Exception as e:
-                            # print('error FOR BOBBY JONES')
                             continue  
+                    else:
+                        continue
         except:
-            print('got all acct',len(all_accounts))
-            every_account.update(all_accounts)
-            return all_accounts
+            print('complete cycle')
+        every_account.update(all_accounts)
 def add_accounts_to_db(all_accounts):
     for account in all_accounts.values():
         username = account.username

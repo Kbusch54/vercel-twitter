@@ -143,7 +143,7 @@ def load_chrome_driver():
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument("--window-size=1920,1080")
     options.add_argument('--disable-software-rasterizer')
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    driver = webdriver.Chrome(service=Service(executable_path=r'/usr/bin/chromedriver'), options=options)
     # driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     # driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
     # driver.execute_cdp_cmd('Network.setUserAgentOverride', {

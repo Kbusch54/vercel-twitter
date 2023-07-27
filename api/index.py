@@ -285,17 +285,19 @@ def start_process():
     # length = len(all_accounts)
     trackers = get_All_Tracked()
     tracking = []
+    print(tracking)
     for tracked in trackers.data:
         tracking.append(tracked['account'])
-    if(len(tracking) == 0):
-        print('No accounts to track')
-        exit()
-    print(tracking)
-    twitter_log_in()
-    time.sleep(2)
-    get_following(tracking)
+        if(len(tracked['account']) == 0):
+            print('No accounts to track')
+            exit()
+        twitter_log_in()
+        time.sleep(2)
+        get_following(tracked['account'])
+        add_accounts_to_db()
+        all_accounts.clear()
+        print('cycle complet for', tracked['account'])
     driver.quit()
-    add_accounts_to_db()
     print('done')
 
 def get_All_Tracked():
@@ -367,10 +369,9 @@ def twitter_log_in():
     time.sleep(2)
     return driver
 
-def get_following(trackers):
-    for tracked in trackers:
+def get_following(tracker):
         # new driver new url
-        url = f"https://twitter.com/{tracked}/following"
+        url = f"https://twitter.com/{tracker}/following"
         driver.get(url)
         time.sleep(2)
         # Determine the height of the viewport
@@ -411,22 +412,15 @@ def get_following(trackers):
                             if description == '' or description == 'Follow' or description == 'Follow\n':
                                 seen.add(accountName)
                                 continue
-                            if accountName in doubled:
-                                acc = all_accounts[accountName]
-                                acc.add_follower(tracked)
-                                all_accounts[accountName] = acc
-                            else:
-                                acc = Account(accountName, usernameForAcc, description)
-                                acc.add_follower(tracked)
-                                all_accounts[accountName] = acc
+                            acc = Account(accountName, usernameForAcc, description)
+                            acc.add_follower(tracker)
+                            all_accounts[accountName] = acc
                             seen.add(accountName)
                         except Exception as e:
                             # print('error FOR BOBBY JONES')
                             continue  
         except:
             print('complete')
-            driver.quit()
-            break
 def add_accounts_to_db():
     for account in all_accounts.values():
         username = account.username
@@ -437,14 +431,6 @@ def add_accounts_to_db():
     global length
     print(len(all_accounts))
     update_last_num(len(all_accounts))
-# def set_up_accts():
-#     accounts = get_all_accounts()
-#     for account in accounts:
-#         acc = Account(account['account'], account['username'], account['description'])
-#         acc.followed_by = account['followed_by']
-#         all_accounts[account['account']] = acc
-#         doubled.add(account.accountName)
-#         inDb.add(account.accountName)
 
 def add_list(usersToAdd):
     twitter_log_in()

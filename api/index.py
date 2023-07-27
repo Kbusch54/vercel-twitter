@@ -14,6 +14,7 @@ from dotenv import load_dotenv
 from supabase import create_client, Client
 from concurrent.futures import ThreadPoolExecutor
 import requests
+import pyautogui
 
 import os
 dotenv_path = '../.env'
@@ -377,6 +378,8 @@ def twitter_log_in():
 
 def get_following(tracker):
         # new driver new url
+        pyautogui.hotkey('ctrl', 't') # This will open a new tab
+        driver.switch_to.window(driver.window_handles[-1])
         url = f"https://twitter.com/{tracker}/following"
         driver.get(url)
         time.sleep(2)

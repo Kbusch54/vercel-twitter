@@ -145,7 +145,7 @@ def load_chrome_driver():
     driver.maximize_window()
     driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
     driver.execute_cdp_cmd('Network.setUserAgentOverride', {
-        "userAgent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.53 Safari/537.36'})
+        "userAgent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'})
 def update_last_num(amt):
     try:
         supabase.table('sign').update({
@@ -490,6 +490,7 @@ logging.getLogger('flask_cors').level = logging.DEBUG
 @app.route("/api/logIn")
 def logIn_yes():
     logIn()
+    driver.quit()
     return 'logged in'
 @app.route("/api/follow/<path:followList>")
 def create_tweet(followList):

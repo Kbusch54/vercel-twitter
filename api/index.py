@@ -287,6 +287,8 @@ def start_process():
         # doubled.add(account['account'])
         inDb.add(account['account'])
     # length = len(all_accounts)
+    print('accounts length')
+    print(len(accounts))
     trackers = get_All_Tracked()
     tracking = []
     print(trackers)
@@ -432,6 +434,7 @@ def get_following(tracker):
                             # print('error FOR BOBBY JONES')
                             continue  
         except:
+            print('got all acct',len(all_accounts))
             every_account.update(all_accounts)
             return all_accounts
 def add_accounts_to_db(all_accounts):

@@ -664,6 +664,7 @@ def process_trackers(trackers,wdriver, max_workers=10):
     wdriver.quit()
 def worker(tracker, cookies):
     # Each worker creates a separate WebDriver instance
+    print('starting to get follows for '+tracker)
     driver = load_onDriver()
     driver.get("https://twitter.com/")
     for cookie in cookies:

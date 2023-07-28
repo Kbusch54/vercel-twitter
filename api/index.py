@@ -142,7 +142,7 @@ def load_onDriver():
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     # driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
     driver.execute_cdp_cmd('Network.setUserAgentOverride', {
-        "userAgent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'})
+        "userAgent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.81 Safari/537.36'})
     return driver
 def load_chrome_driver():
     global driver
@@ -160,7 +160,7 @@ def load_chrome_driver():
     # driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
     driver = webdriver.Chrome(service=service_chrome, options=options)
     driver.execute_cdp_cmd('Network.setUserAgentOverride', {
-        "userAgent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'})
+        "userAgent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.81 Safari/537.36'})
 def  update_last_num(amt):
     try:
         supabase.table('sign').update({

@@ -161,8 +161,9 @@ def load_driver_path():
     options.add_argument("--window-size=1920,1080")
     options.add_argument('--disable-software-rasterizer')
 
-    # Set up WebDriver
-    driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=options)
+    service = Service(os.environ.get("CHROMEDRIVER_PATH"))
+
+    driver = webdriver.Chrome(service=service, options=options)
 def load_chrome_driver():
     global driver
     service_chrome = Service(executable_path=r'/usr/bin/chromedriver')

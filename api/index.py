@@ -571,7 +571,7 @@ def test():
     #     if(len(tracked['account']) == 0):
     #         print('No accounts to track')
     #         exit()
-    tracking = ['elonmusk']
+    tracking = ['elonmusk','tombrady','davehsu','trump']
     process_trackers(tracking,wdriver)
     return 'done ' + str(len(multi_acc))
 def log_In():
@@ -706,6 +706,7 @@ def get_multiple_tracker(tracker,driver):
         except:
             print('complete cycle')
         driver.quit()
+        print('done with scraping: ',tracker)
         multi_acc.update(all_accounts)
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=False )

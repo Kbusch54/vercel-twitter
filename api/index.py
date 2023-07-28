@@ -647,17 +647,28 @@ def load_pickle():
 
     return cookies
 
-def process_trackers(trackers,wdriver, max_workers=5):
+def process_trackers(trackers,wdriver, max_workers=10):
     cookies = load_pickle()
     # cookies = pickle.load(open("cookies.pkl", "rb"))
+    # with ThreadPoolExecutor(max_workers=max_workers) as executor:
+    #     for tracker in trackers:
+    #         driver = load_onDriver()
+    #         driver.get("https://twitter.com/")
+    #         for cookie in cookies:
+    #             driver.add_cookie(cookie)
+    #         executor.submit(get_multiple_tracker, tracker,driver)
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         for tracker in trackers:
-            driver = load_onDriver()
-            driver.get("https://twitter.com/")
-            for cookie in cookies:
-                driver.add_cookie(cookie)
-            executor.submit(get_multiple_tracker, tracker,driver)
+            # We pass copies of the "cookies" list to each worker
+            executor.submit(worker, tracker, cookies.copy())
     wdriver.quit()
+def worker(tracker, cookies):
+    # Each worker creates a separate WebDriver instance
+    driver = load_onDriver()
+    driver.get("https://twitter.com/")
+    for cookie in cookies:
+        driver.add_cookie(cookie)
+    get_multiple_tracker(tracker, driver)
 def get_multiple_tracker(tracker,driver):
         # new driver new url
         time.sleep(2)

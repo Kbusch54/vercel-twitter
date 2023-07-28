@@ -131,8 +131,11 @@ class Account:
         }
 length = 0
 def load_onDriver():
-    service_chrome = Service(executable_path=r'/usr/bin/chromedriver')
-    options = webdriver.ChromeOptions()
+    # service_chrome = Service(executable_path=r'/usr/bin/chromedriver')
+    options = Options()
+    options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+
+    # Add any necessary arguments
     options.add_argument("--disable-extensions")
     options.add_argument("--disable-gpu")
     options.add_argument("--headless")
@@ -140,12 +143,16 @@ def load_onDriver():
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument("--window-size=1920,1080")
     options.add_argument('--disable-software-rasterizer')
+
+    service = Service(os.environ.get("CHROMEDRIVER_PATH"))
+
+    driver = webdriver.Chrome(service=service, options=options)
     # driver = webdriver.Chrome(service=Service(ChromeDriverManager(version=r'/usr/bin/chromedriver').install()), options=options)
     # driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-    driver = webdriver.Chrome(service=service_chrome, options=options)
+    # driver = webdriver.Chrome(service=service_chrome, options=options)
     # driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
-    driver.execute_cdp_cmd('Network.setUserAgentOverride', {
-        "userAgent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.90 Safari/537.36'})
+    # driver.execute_cdp_cmd('Network.setUserAgentOverride', {
+        # "userAgent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.90 Safari/537.36'})
     return driver
 def load_driver_path():
     global driver

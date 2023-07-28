@@ -130,6 +130,7 @@ class Account:
         }
 length = 0
 def load_onDriver():
+    service_chrome = Service(executable_path=r'/usr/bin/chromedriver')
     options = webdriver.ChromeOptions()
     options.add_argument("--disable-extensions")
     options.add_argument("--disable-gpu")
@@ -139,10 +140,11 @@ def load_onDriver():
     options.add_argument("--window-size=1920,1080")
     options.add_argument('--disable-software-rasterizer')
     # driver = webdriver.Chrome(service=Service(ChromeDriverManager(version=r'/usr/bin/chromedriver').install()), options=options)
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    # driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    driver = webdriver.Chrome(service=service_chrome, options=options)
     # driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
     driver.execute_cdp_cmd('Network.setUserAgentOverride', {
-        "userAgent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.81 Safari/537.36'})
+        "userAgent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.90 Safari/537.36'})
     return driver
 def load_chrome_driver():
     global driver
@@ -160,7 +162,7 @@ def load_chrome_driver():
     # driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
     driver = webdriver.Chrome(service=service_chrome, options=options)
     driver.execute_cdp_cmd('Network.setUserAgentOverride', {
-        "userAgent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.81 Safari/537.36'})
+        "userAgent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.90 Safari/537.36'})
 def  update_last_num(amt):
     try:
         supabase.table('sign').update({

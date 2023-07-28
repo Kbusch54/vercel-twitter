@@ -14,7 +14,8 @@ from dotenv import load_dotenv
 from supabase import create_client, Client
 from webdriver_manager.chrome import ChromeDriverManager
 from concurrent.futures import ThreadPoolExecutor
-import requests
+import pickle
+import io
 
 import os
 dotenv_path = '../.env'
@@ -23,25 +24,21 @@ load_dotenv(dotenv_path=dotenv_path)
 user = os.getenv('TWITTER_USER')
 username = os.getenv('TWITTER_USERNAME')
 passwrd = os.getenv('TWITTER_PASSWORD')
+userbame2 = os.getenv('TWITTER_USERNAME2')
+passwrd2 = os.getenv('TWITTER_PASSWORD2')
 doubled = set()
 
 inDb = set()
 url: str = os.getenv('SUPABASE_URL')
 key: str = os.getenv('SUPABASE_KEY')
 dbUser='postgres'
-dbPassword='C12veEutvfQzE2y9'
+dbPassword: str = os.getenv('DB_PASSWORD')
 dbPort="5432"
 dbHost = 'db.utvsxgfogcixgkztnvxo.supabase.co'
 dbdDatabase='postgres'
-print(url)
 supabase: Client = create_client(url, key)
-# options = Options()
-# options.add_argument("--disable-extensions")
-# options.add_argument("--disable-gpu")
-# options.add_argument("--no-sandbox") # linux only
-# options.add_argument("--headless")
-# mac only
-# options.add_argument("--start-maximized")
+bucket = 'pickle'
+path = 'cookies.pkl'
 
 app = Flask(__name__)
 cors = CORS(app, resources={
@@ -132,13 +129,11 @@ class Account:
             'followed_by': self.followed_by
         }
 length = 0
-def load_chrome_driver():
-    global driver
-    service_chrome = Service(executable_path=r'/usr/bin/chromedriver')
+def load_onDriver():
     options = webdriver.ChromeOptions()
     options.add_argument("--disable-extensions")
     options.add_argument("--disable-gpu")
-    options.add_argument("--headless")
+    # options.add_argument("--headless")
     options.add_argument('--no-sandbox')  
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument("--window-size=1920,1080")
@@ -148,7 +143,24 @@ def load_chrome_driver():
     # driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
     driver.execute_cdp_cmd('Network.setUserAgentOverride', {
         "userAgent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'})
-def update_last_num(amt):
+    return driver
+def load_chrome_driver():
+    global driver
+    service_chrome = Service(executable_path=r'/usr/bin/chromedriver')
+    options = webdriver.ChromeOptions()
+    options.add_argument("--disable-extensions")
+    options.add_argument("--disable-gpu")
+    # options.add_argument("--headless")
+    options.add_argument('--no-sandbox')  
+    options.add_argument('--disable-dev-shm-usage')
+    options.add_argument("--window-size=1920,1080")
+    options.add_argument('--disable-software-rasterizer')
+    # driver = webdriver.Chrome(service=Service(ChromeDriverManager(version=r'/usr/bin/chromedriver').install()), options=options)
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    # driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
+    driver.execute_cdp_cmd('Network.setUserAgentOverride', {
+        "userAgent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'})
+def  update_last_num(amt):
     try:
         supabase.table('sign').update({
             'last_updated': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -198,6 +210,7 @@ def logIn_Credentials(cred_user,cred_password):
     driver.find_element(by='xpath',value=tweetBtn).click()
     time.sleep(2)
     return driver
+
 def logIn():
     # create instance of Chrome webdriver
     load_chrome_driver()
@@ -229,6 +242,7 @@ def logIn():
     # request using xpath
     # clicking on that element
     driver.find_element(by='xpath',value=logInBtn).click()
+ 
     # adjust the sleep time according to your internet speed
 def tweetThis(tweet):
     twitter_log_in()
@@ -300,10 +314,10 @@ def start_process():
             print('No accounts to track')
             exit()
     twitter_log_in()
-    # with ThreadPoolExecutor(max_workers=10) as executor:
-    #     executor.map(scrape_and_push_data(), tracking)
-    for tracker in tracking:
-        scrape_and_push_data(tracker)
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        executor.map(scrape_and_push_data, tracking)
+    # for tracker in tracking:
+    #     scrape_and_push_data(tracker)
     print('done with scraping')
     print(len(every_account))
     add_accounts_to_db(every_account)
@@ -517,7 +531,152 @@ def add_header(response):
     return response
 
 iterator =0
+@app.route("/api/test")
+def test():
+    wdriver = log_In()
+    time.sleep(2)
+    # trackers = get_All_Tracked()
+    # tracking = []
+    # for tracked in trackers.data:
+    #     tracking.append(tracked['account'])
+    #     if(len(tracked['account']) == 0):
+    #         print('No accounts to track')
+    #         exit()
+    tracking = ['elonmusk']
+    process_trackers(tracking,wdriver)
+    return 'done ' + str(len(multi_acc))
+def log_In():
+    # create instance of Chrome webdriver
+    supabase.storage.from_(bucket).remove(path)
+    wdriver = load_onDriver()
+    wdriver.get("https://twitter.com/login")
+        # adjust the sleep time according to your internet speed
+    time.sleep(2)
+    # find the element where we have to 
+    # enter the xpath
+    # wdriver.find_element.__getattribute__
+    # fill the number or mail
+    wdriver.find_element(
+        by='xpath', value=inputUser).send_keys(user)
+    # find the element next button 
+    # request using xpath 
+    # clicking on that element 
+    time.sleep(1)
+    wdriver.find_element(
+        by='xpath',
+        value=nextBtn).click()
+    # adjust the sleep time according to your internet speed
+    time.sleep(2)
 
+    # find the element where we have to 
+    # enter the xpath
+    # fill the password
+    wdriver.find_element(
+        by='xpath',value=inputPass).send_keys(passwrd)
+    # find the element login button
+    # request using xpath
+    # clicking on that element
+    wdriver.find_element(by='xpath',value=logInBtn).click()
+    time.sleep(2)
+    upload_pickle(wdriver)
+    # save_cookie_file(wdriver)
+    # pickle.dump(wdriver.get_cookies(), open("cookies.pkl", "wb"))
 
+    return wdriver
+ 
+
+multi_acc={}
+def upload_pickle(wdriver):
+    # Upload the serialized cookies
+    cookies = wdriver.get_cookies()
+    # Serialize the cookies into a bytes object
+    serialized_cookies = pickle.dumps(cookies)
+    # Open the serialized cookies as a file-like object
+    file_like_object = io.BytesIO(serialized_cookies)
+    # Convert the BytesIO object to bytes
+    data = file_like_object.getvalue()
+    response = supabase.storage.from_(bucket).upload(path, data)
+    json_response = response.json()
+
+    if 'error' in json_response:
+        print('Error uploading file:', json_response['error'])
+    else:
+        print('File uploaded successfully')
+
+def load_pickle():
+    downloaded_file = supabase.storage.from_(bucket).download(path)
+
+    if downloaded_file is None:
+        print('Error downloading file: File might not exist or access might be denied.')
+        return None
+
+    # Convert the bytes object to a file-like object
+    file_like_object = io.BytesIO(downloaded_file)
+
+    # Load the cookies from the file-like object
+    cookies = pickle.load(file_like_object)
+
+    return cookies
+
+def process_trackers(trackers,wdriver, max_workers=5):
+    cookies = load_pickle()
+    # cookies = pickle.load(open("cookies.pkl", "rb"))
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        for tracker in trackers:
+            driver = load_onDriver()
+            driver.get("https://twitter.com/")
+            for cookie in cookies:
+                driver.add_cookie(cookie)
+            executor.submit(get_multiple_tracker, tracker,driver)
+    wdriver.quit()
+def get_multiple_tracker(tracker,driver):
+        # new driver new url
+        time.sleep(2)
+        url = f"https://twitter.com/{tracker}/following"
+        driver.get(url)
+        time.sleep(2)
+        all_accounts = {}
+        # Determine the height of the viewport
+        viewport_height = driver.execute_script("return window.innerHeight")
+        # Determine the height of the entire document
+        document_height = driver.execute_script("return document.documentElement.scrollHeight")
+        # Calculate the number of scrolls needed
+        num_scrolls = document_height // viewport_height
+        seen = set()
+        try:
+            for _ in range(num_scrolls):
+                # Scroll down to the bottom
+                driver.execute_script("window.scrollBy(0, arguments[0])", viewport_height)
+                time.sleep(0.5)
+                # Capture the elements
+                elemnt = driver.find_element(
+                by='xpath',
+                value=followingDiv
+                )
+                # accounts = elemnt.find_elements(By.CSS_SELECTOR, '.css-1dbjc4n.r-18u37iz')
+                fullacc = elemnt.find_elements(By.CSS_SELECTOR, '[data-testid="cellInnerDiv"]')
+                for e in fullacc:
+                    if isinstance(e, webdriver.remote.webelement.WebElement):
+                        try:
+                            usernameForAcc = e.text[0:e.text.find('\n')]
+                            accountName = e.text[e.text.find(usernameForAcc)+1:e.text.find('Follow')-1].split('\n')[1]
+                            if accountName in seen or accountName == '' or accountName == 'Follow' or accountName == 'Follow\n' or accountName in inDb:
+                                continue
+                            description = e.text[e.text.find('Follow'):].replace('Follow\n','',1)
+                            if description == '' or description == 'Follow' or description == 'Follow\n':
+                                seen.add(accountName)
+                                continue
+                            acc = Account(accountName, usernameForAcc, description)
+                            acc.add_follower(tracker)
+                            all_accounts[accountName] = acc
+                            seen.add(accountName)
+                        except Exception as e:
+                            continue  
+                    else:
+                        continue
+        except:
+            print('complete cycle')
+        driver.quit()
+        multi_acc.update(all_accounts)
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=False )

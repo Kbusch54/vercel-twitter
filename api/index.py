@@ -13,6 +13,7 @@ from flask_cors import CORS, cross_origin
 from dotenv import load_dotenv
 from supabase import create_client, Client
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
 from concurrent.futures import ThreadPoolExecutor
 import pickle
 import io
@@ -146,6 +147,22 @@ def load_onDriver():
     driver.execute_cdp_cmd('Network.setUserAgentOverride', {
         "userAgent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.90 Safari/537.36'})
     return driver
+def load_driver_path():
+    global driver
+    options = Options()
+    options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+
+    # Add any necessary arguments
+    options.add_argument("--disable-extensions")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--headless")
+    options.add_argument('--no-sandbox')  
+    options.add_argument('--disable-dev-shm-usage')
+    options.add_argument("--window-size=1920,1080")
+    options.add_argument('--disable-software-rasterizer')
+
+    # Set up WebDriver
+    driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), options=options)
 def load_chrome_driver():
     global driver
     service_chrome = Service(executable_path=r'/usr/bin/chromedriver')
@@ -216,7 +233,8 @@ def logIn_Credentials(cred_user,cred_password):
 
 def logIn():
     # create instance of Chrome webdriver
-    load_chrome_driver()
+    # load_chrome_driver()
+    load_driver_path()
     driver.get("https://twitter.com/login")
         # adjust the sleep time according to your internet speed
     time.sleep(2)

@@ -19,6 +19,10 @@ import pickle
 import io
 
 import os
+import psutil
+process = psutil.Process(os.getpid())
+print(process.memory_percent())
+
 dotenv_path = '../.env'
 load_dotenv(dotenv_path=dotenv_path)
 
@@ -73,10 +77,10 @@ def hello_there(name):
     content = "Hello there, " + clean_name + "! It's " + formatted_now
     return content
 inputUser = '/html/body/div/div/div/div[1]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div/div/div/div[5]/label/div/div[2]/div/input'
-
 nextBtn = '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div/div/div/div[6]/div'
 followingNum ='//*[@id="react-root"]/div/div/div[2]/main/div/div/div/div[1]/div/div[3]/div/div/div/div/div[5]/div[1]/a/span[1]/span'
 inputPass ='/html/body/div/div/div/div[1]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[1]/div/div/div[3]/div/label/div/div[2]/div[1]/input'
+inputPass2='/html/body/div/div/div/div[1]/div[2]/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[1]/div/div/div[3]/div/label/div/div[2]/div[1]/input'
 followingDiv = '//*[@id="react-root"]/div/div/div[2]/main/div/div/div/div[1]/div/section/div'
 followBtn = 'css-18t94o4.css-1dbjc4n.r-42olwf.r-sdzlij.r-1phboty.r-rs99b7.r-15ysp7h.r-4wgw6l.r-1ny4l3l.r-ymttw5.r-o7ynqc.r-6416eg.r-lrvibr'
 logInBtn = '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[2]/div/div[1]/div/div/div'
@@ -111,6 +115,8 @@ nextBtn = '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2
 logInBtn = '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[2]/div/div[1]/div/div/div'
 tweetBtn ='//*[@id="react-root"]/div/div/div[2]/header/div/div/div/div[1]/div[3]/a'
 tweetButton = '//*[@id="layers"]/div[2]/div/div/div/div/div/div[2]/div[2]/div/div/div/div[3]/div[2]/div[1]/div/div/div/div[2]/div[2]/div/div/div[2]/div[4]'
+tweetBox = "/html/body/div[1]/div/div/div[2]/main/div/div/div/div[1]/div/div[3]/div/div/section/div/div/div/div/div[2]/div/div/article/div/div/div[2]/div[2]/div[2]/div"
+tweetColumn ="/html/body/div[1]/div/div/div[2]/main/div/div/div/div[1]/div/div[3]/div/div/section/div"
 class Account:
     def __init__(self, account, username, description):
         self.account = account
@@ -131,9 +137,9 @@ class Account:
         }
 length = 0
 def load_onDriver():
-    # service_chrome = Service(executable_path=r'/usr/bin/chromedriver')
+    service_chrome = Service(executable_path=r'/usr/bin/chromedriver')
     options = Options()
-    options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+    # options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
 
     # Add any necessary arguments
     options.add_argument("--disable-extensions")
@@ -144,15 +150,15 @@ def load_onDriver():
     options.add_argument("--window-size=1920,1080")
     options.add_argument('--disable-software-rasterizer')
 
-    service = Service(os.environ.get("CHROMEDRIVER_PATH"))
+    # service = Service(os.environ.get("CHROMEDRIVER_PATH"))
 
-    driver = webdriver.Chrome(service=service, options=options)
+    # driver = webdriver.Chrome(service=service, options=options)
     # driver = webdriver.Chrome(service=Service(ChromeDriverManager(version=r'/usr/bin/chromedriver').install()), options=options)
-    # driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     # driver = webdriver.Chrome(service=service_chrome, options=options)
     # driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
-    # driver.execute_cdp_cmd('Network.setUserAgentOverride', {
-        # "userAgent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.90 Safari/537.36'})
+    driver.execute_cdp_cmd('Network.setUserAgentOverride', {
+        "userAgent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5735.90 Safari/537.36'})
     return driver
 def load_driver_path():
     global driver
@@ -201,43 +207,6 @@ def  update_last_num(amt):
             print("Added to Database") 
 def remove_at_sign(usersToAdd):
     return [user.replace("@", "") for user in usersToAdd]
-def logIn_Credentials(cred_user,cred_password):
-    # create instance of Chrome webdriver
-    load_chrome_driver() 
-    driver.get("https://twitter.com/login")
-        # adjust the sleep time according to your internet speed
-    time.sleep(2)
-    # find the element where we have to 
-    # enter the xpath
-    # driver.find_element.__getattribute__
-    # fill the number or mail
-    driver.find_element(
-        by='xpath', value=inputUser).send_keys(cred_user)
-    # find the element next button 
-    # request using xpath 
-    # clicking on that element 
-    driver.find_element(
-        by='xpath',
-        value=nextBtn).click()
-
-    # adjust the sleep time according to your internet speed
-    time.sleep(2)
-
-    # find the element where we have to 
-    # enter the xpath
-    # fill the password
-    driver.find_element(
-        by='xpath',value=inputPass).send_keys(cred_password)
-    # find the element login button
-    # request using xpath
-    # clicking on that element
-    driver.find_element(by='xpath',value=logInBtn).click()
-    # adjust the sleep time according to your internet speed
-    time.sleep(2)
-
-    driver.find_element(by='xpath',value=tweetBtn).click()
-    time.sleep(2)
-    return driver
 
 def logIn():
     # create instance of Chrome webdriver
@@ -265,8 +234,16 @@ def logIn():
     # find the element where we have to 
     # enter the xpath
     # fill the password
-    driver.find_element(
-        by='xpath',value=inputPass).send_keys(passwrd)
+    inputPass_box = driver.find_element(
+        by='xpath',value=inputPass)
+    
+    if inputPass_box:
+        inputPass_box.send_keys(passwrd)
+    else:
+        inputPass_box = driver.find_element(
+        by='xpath',value=inputPass2)
+        inputPass_box.send_keys(passwrd2)
+    
     # find the element login button
     # request using xpath
     # clicking on that element
@@ -311,8 +288,15 @@ def twitter_log_in():
     # find the element where we have to 
     # enter the xpath
     # fill the password
-    driver.find_element(
-        by='xpath',value=inputPass).send_keys(passwrd)
+    inputPass_box = driver.find_element(
+        by='xpath',value=inputPass)
+    
+    if inputPass_box:
+        inputPass_box.send_keys(passwrd)
+    else:
+        inputPass_box = driver.find_element(
+        by='xpath',value=inputPass2)
+        inputPass_box.send_keys(passwrd2)
     # find the element login button
     # request using xpath
     # clicking on that element
@@ -375,6 +359,23 @@ def get_all_accounts():
     finally:
         if(accounts):
             print("PostgreSQL connection is closed")
+
+def fetch_all_records(size=1000):
+
+    all_records = []
+    page = 0
+    
+    while True:
+        start = page * size
+        end = start + size - 1
+        records = supabase.table('Followed').select("account").range(start, end).execute()
+        if len(records.data) > 0:
+            all_records.extend(records.data)
+            page += 1
+        else:
+            break
+
+    return all_records
 def update_or_insert(account, username, description, followed_by):
     try:
         supabase.table('Followed').upsert({
@@ -415,8 +416,15 @@ def twitter_log_in():
     # find the element where we have to 
     # enter the xpath
     # fill the password
-    driver.find_element(
-        by='xpath',value=inputPass).send_keys(passwrd)
+    inputPass_box = driver.find_element(
+        by='xpath',value=inputPass)
+    
+    if inputPass_box:
+        inputPass_box.send_keys(passwrd)
+    else:
+        inputPass_box = driver.find_element(
+        by='xpath',value=inputPass2)
+        inputPass_box.send_keys(passwrd2)
     # find the element login button
     # request using xpath
     # clicking on that element
@@ -558,21 +566,39 @@ def create_list():
 def add_header(response):
     response.headers['Access-Control-Allow-Origin'] = '*'
     return response
+@app.route("/api/getTracker")
+def get_tracker():
 
+    tracker = get_All_Tracked()
+    # get_following(tracker)
+    accounts = fetch_all_records()    
+    print(len(accounts))
+    for account in accounts:
+        inDb.add(account['account'])
+    print(len(inDb))
+    return 'done'
 iterator =0
 @app.route("/api/test")
 def test():
+    accounts = fetch_all_records()    
+    print(len(accounts))
+    for account in accounts:
+        inDb.add(account['account'])
+    trackers = get_All_Tracked()
+    tracking = []
+    for tracked in trackers.data:
+        tracking.append(tracked['account'])
+        if(len(tracked['account']) == 0):
+            print('No accounts to track')
+            exit()
     wdriver = log_In()
+    read_ares_tweets(wdriver)
     time.sleep(2)
-    # trackers = get_All_Tracked()
-    # tracking = []
-    # for tracked in trackers.data:
-    #     tracking.append(tracked['account'])
-    #     if(len(tracked['account']) == 0):
-    #         print('No accounts to track')
-    #         exit()
-    tracking = ['elonmusk','tombrady','davehsu','trump']
+    # tracking = ['elonmusk','tombrady','davehsu','trump']
     process_trackers(tracking,wdriver)
+    print('done with scraping')
+    # print(multi_acc.values())
+    add_accounts_to_db(multi_acc)
     return 'done ' + str(len(multi_acc))
 def log_In():
     # create instance of Chrome webdriver
@@ -600,8 +626,15 @@ def log_In():
     # find the element where we have to 
     # enter the xpath
     # fill the password
-    wdriver.find_element(
-        by='xpath',value=inputPass).send_keys(passwrd)
+    inputPass_box = wdriver.find_element(
+        by='xpath',value=inputPass)
+    
+    if inputPass_box:
+        inputPass_box.send_keys(passwrd)
+    else:
+        inputPass_box = wdriver.find_element(
+        by='xpath',value=inputPass2)
+        inputPass_box.send_keys(passwrd2)
     # find the element login button
     # request using xpath
     # clicking on that element
@@ -647,7 +680,50 @@ def load_pickle():
 
     return cookies
 
-def process_trackers(trackers,wdriver, max_workers=10):
+
+def read_ares_tweets(driver):
+    time.sleep(2)
+    driver.get("https://twitter.com/AresLabs_xyz")
+    time.sleep(2)
+     # Determine the height of the viewport
+    viewport_height = driver.execute_script("return window.innerHeight")
+    # Determine the height of the entire document
+    document_height = driver.execute_script("return document.documentElement.scrollHeight")
+    # Calculate the number of scrolls needed
+    num_scrolls = document_height // viewport_height
+    all_accounts = {}
+    try:
+        for _ in range(num_scrolls):
+            # Scroll down to the bottom
+            driver.execute_script("window.scrollBy(0, arguments[0])", viewport_height)
+            time.sleep(0.25)
+            elemnt = driver.find_element(By.XPATH, value=tweetColumn)
+            tweets = elemnt.find_elements(By.CSS_SELECTOR, '[data-testid="tweet"]')
+            for tweet in tweets:
+                if isinstance(tweet, webdriver.remote.webelement.WebElement):
+                    try:
+                        tweetText = tweet.text
+                        tweetText = tweetText.split('\n')
+                        joined_string = ' '.join(tweetText)
+                        start = joined_string.find('Bio:')+4
+                        end = joined_string.find('alert follower:')
+                        bio = joined_string[start:end]
+                        if 'New project:' in joined_string:
+                            acc = joined_string[joined_string.find('New project:')+13:joined_string.find('(follower')]
+                            if acc not in inDb:
+                                account = Account(acc, 'New project: '+ acc, bio)
+                                account.add_follower('@AresLabs_xyz')
+                                all_accounts[acc] = account
+                                inDb.add(acc)
+                    except Exception as e:
+                        continue
+                else:
+                    continue
+    except:
+        print('complete cycle')
+    print('done with scraping')
+    multi_acc.update(all_accounts)
+def process_trackers(trackers,wdriver, max_workers=20):
     cookies = load_pickle()
     # cookies = pickle.load(open("cookies.pkl", "rb"))
     # with ThreadPoolExecutor(max_workers=max_workers) as executor:
@@ -683,7 +759,6 @@ def get_multiple_tracker(tracker,driver):
         document_height = driver.execute_script("return document.documentElement.scrollHeight")
         # Calculate the number of scrolls needed
         num_scrolls = document_height // viewport_height
-        seen = set()
         try:
             for _ in range(num_scrolls):
                 # Scroll down to the bottom
@@ -699,18 +774,18 @@ def get_multiple_tracker(tracker,driver):
                 for e in fullacc:
                     if isinstance(e, webdriver.remote.webelement.WebElement):
                         try:
-                            usernameForAcc = e.text[0:e.text.find('\n')]
-                            accountName = e.text[e.text.find(usernameForAcc)+1:e.text.find('Follow')-1].split('\n')[1]
-                            if accountName in seen or accountName == '' or accountName == 'Follow' or accountName == 'Follow\n' or accountName in inDb:
+                            usernameForAcc = e.text.split('\n', 1)[0]
+                            accountName = e.text.split('\n', 2)[1]
+                            if accountName == '' or accountName == 'Follow' or accountName == 'Follow\n' or accountName in inDb:
                                 continue
-                            description = e.text[e.text.find('Follow'):].replace('Follow\n','',1)
+                            description = e.text.split('Follow', 1)[1]
                             if description == '' or description == 'Follow' or description == 'Follow\n':
-                                seen.add(accountName)
+                                inDb.add(accountName)
                                 continue
                             acc = Account(accountName, usernameForAcc, description)
                             acc.add_follower(tracker)
                             all_accounts[accountName] = acc
-                            seen.add(accountName)
+                            inDb.add(accountName)
                         except Exception as e:
                             continue  
                     else:
